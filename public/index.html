@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bitácora Digital - Sistema de Control</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="header-content">
+                <div class="logo">
+                    📝 Bitácora Digital
+                </div>
+                <h1>Sistema de Control de Vehículos y Equipos</h1>
+            </div>
+        </header>
+
+        <!-- Área de mensajes -->
+        <div id="mensaje" class="alert" style="display: none;"></div>
+
+        <!-- Navegación de pestañas -->
+        <nav class="nav-tabs">
+            <button class="nav-tab active" data-tab="nuevo-registro">
+                📝 Nuevo Registro
+            </button>
+            <button class="nav-tab" data-tab="historial">
+                📊 Historial
+            </button>
+            <button class="nav-tab" data-tab="configuracion">
+                ⚙️ Configuración
+            </button>
+        </nav>
+
+        <!-- Contenido de pestañas -->
+        <div class="tabs-container">
+            
+            <!-- PESTAÑA: NUEVO REGISTRO -->
+            <div id="nuevo-registro" class="tab-content active">
+                <div class="form-container">
+                    <form id="bitacoraForm">
+                        <div class="form-section">
+                            <div class="section-header">
+                                📋 Información General
+                            </div>
+                            
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="trabajador">Trabajador *</label>
+                                    <select id="trabajador" required>
+                                        <option value="">Seleccionar trabajador...</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="vehiculo">Vehículo *</label>
+                                    <select id="vehiculo" required>
+                                        <option value="">Seleccionar vehículo...</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="fecha">Fecha *</label>
+                                    <input type="date" id="fecha" required>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="turno">Turno *</label>
+                                    <select id="turno" required>
+                                        <option value="">Seleccionar turno...</option>
+                                        <option value="MAÑANA">Mañana</option>
+                                        <option value="TARDE">Tarde</option>
+                                        <option value="NOCHE">Noche</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="tipoRegistro">Tipo de Registro *</label>
+                                    <select id="tipoRegistro" required>
+                                        <option value="">Seleccionar tipo...</option>
+                                        <option value="inicio_turno">Inicio de Turno</option>
+                                        <option value="fin_turno">Fin de Turno</option>
+                                        <option value="mantenimiento">Mantenimiento</option>
+                                        <option value="incidencia">Incidencia</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="form-group full-width">
+                                    <label for="observacionesGenerales">Observaciones Generales</label>
+                                    <textarea id="observacionesGenerales" rows="3" placeholder="Observaciones del turno o registro..."></textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- VERIFICACIÓN DE EQUIPO -->
+                        <div class="form-section">
+                            <div class="section-header">
+                                🔧 Verificación de Equipo
+                            </div>
+                            
+                            <div class="checkbox-grid">
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="pertiga" name="equipo">
+                                    <label for="pertiga">Pértiga</label>
+                                </div>
+                                
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="escalera_baja" name="equipo">
+                                    <label for="escalera_baja">Escalera de Baja</label>
+                                </div>
+                                
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="escalera_media" name="equipo">
+                                    <label for="escalera_media">Escalera de Media</label>
+                                </div>
+                                
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="detector_13_2kv" name="equipo">
+                                    <label for="detector_13_2kv">Detector 13,2KV</label>
+                                </div>
+                                
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="puesta_tierra_jabalina" name="equipo">
+                                    <label for="puesta_tierra_jabalina">Puesta a Tierra + Jabalina</label>
+                                </div>
+                                
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="pinza_identar_hidraulica" name="equipo">
+                                    <label for="pinza_identar_hidraulica">Pinza de Identar Hidráulica</label>
+                                </div>
+                                
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="aparejo" name="equipo">
+                                    <label for="aparejo">Aparejo</label>
+                                </div>
+                                
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="morzas_autoajustables" name="equipo">
+                                    <label for="morzas_autoajustables">Morzas Autoajustables</label>
+                                </div>
+                                
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="barreta" name="equipo">
+                                    <label for="barreta">Barreta</label>
+                                </div>
+                                
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="ganchos" name="equipo">
+                                    <label for="ganchos">Ganchos</label>
+                                </div>
+                                
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="escafandra" name="equipo">
+                                    <label for="escafandra">Escafandra</label>
+                                </div>
+                                
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="boga_servicio" name="equipo">
+                                    <label for="boga_servicio">Boga de Servicio</label>
+                                </div>
+                                
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="amperometrica" name="equipo">
+                                    <label for="amperometrica">Amperométrica</label>
+                                </div>
+                                
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="rotafasimetro" name="equipo">
+                                    <label for="rotafasimetro">Rotafasímetro</label>
+                                </div>
+                                
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="linterna" name="equipo">
+                                    <label for="linterna">Linterna</label>
+                                </div>
+                                
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="herramientas_mano" name="equipo">
+                                    <label for="herramientas_mano">Herramientas de Mano</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- VERIFICACIÓN DE VEHÍCULO -->
+                        <div class="form-section">
+                            <div class="section-header">
+                                🚗 Verificación de Vehículo
+                            </div>
+                            
+                            <div class="checkbox-grid">
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="seguro" name="vehiculo">
+                                    <label for="seguro">Seguro</label>
+                                </div>
+                                
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="cedula_vehiculo" name="vehiculo">
+                                    <label for="cedula_vehiculo">Cédula Vehículo</label>
+                                </div>
+                                
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="luces" name="vehiculo">
+                                    <label for="luces">Luces</label>
+                                </div>
+                                
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="balizas" name="vehiculo">
+                                    <label for="balizas">Balizas</label>
+                                </div>
+                                
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="aceite" name="vehiculo">
+                                    <label for="aceite">Aceite</label>
+                                </div>
+                                
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="agua" name="vehiculo">
+                                    <label for="agua">Agua</label>
+                                </div>
+                                
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="liquido_freno" name="vehiculo">
+                                    <label for="liquido_freno">Líquido de Freno</label>
+                                </div>
+                                
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="rodados_presion" name="vehiculo">
+                                    <label for="rodados_presion">Rodados Presión</label>
+                                </div>
+                                
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="matafueg" name="vehiculo">
+                                    <label for="matafueg">Matafuego</label>
+                                </div>
+                                
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="auxilio_gato" name="vehiculo">
+                                    <label for="auxilio_gato">Auxilio-Gato</label>
+                                </div>
+                                
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="conos_soga" name="vehiculo">
+                                    <label for="conos_soga">Conos (Soga)</label>
+                                </div>
+                                
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="botiquin" name="vehiculo">
+                                    <label for="botiquin">Botiquín</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- COMBUSTIBLE -->
+                        <div class="form-section">
+                            <div class="section-header">
+                                ⛽ Combustible
+                            </div>
+                            
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="cargaCombustible">Carga de Combustible (Litros)</label>
+                                    <input type="number" id="cargaCombustible" step="0.1" min="0" max="200" placeholder="0.0">
+                                </div>
+                                
+                                <div class="form-group full-width">
+                                    <label for="observacionesCombustible">Observaciones de Combustible</label>
+                                    <textarea id="observacionesCombustible" rows="2" placeholder="Observaciones sobre el combustible..."></textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="submit" class="btn btn-primary">
+                                💾 Guardar Registro
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- PESTAÑA: HISTORIAL -->
+            <div id="historial" class="tab-content">
+                <div class="filters-section">
+                    <div class="section-header">
+                        🔍 Filtros de Búsqueda
+                    </div>
+                    
+                    <div class="filters-grid">
+                        <div class="form-group">
+                            <label for="filtroTrabajador">Trabajador</label>
+                            <select id="filtroTrabajador">
+                                <option value="">Todos los trabajadores</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="filtroVehiculo">Vehículo</label>
+                            <select id="filtroVehiculo">
+                                <option value="">Todos los vehículos</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="fechaDesde">Fecha Desde</label>
+                            <input type="date" id="fechaDesde">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="fechaHasta">Fecha Hasta</label>
+                            <input type="date" id="fechaHasta">
+                        </div>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button onclick="buscarRegistros()" class="btn btn-primary">
+                            🔍 Buscar Registros
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="results-section">
+                    <div class="section-header">
+                        📊 Resultados
+                    </div>
+                    <div id="resultadosHistorial">
+                        <div class="loading">
+                            <div class="spinner"></div>
+                            <p>Cargando registros...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PESTAÑA: CONFIGURACIÓN -->
+            <div id="configuracion" class="tab-content">
+                <div class="config-section">
+                    <div class="section-header">
+                        👥 Gestión de Trabajadores
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="nuevoTrabajadorNombre">Nombre Completo</label>
+                            <input type="text" id="nuevoTrabajadorNombre" placeholder="Nombre del trabajador">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="nuevoTrabajadorCedula">Cédula</label>
+                            <input type="text" id="nuevoTrabajadorCedula" placeholder="Número de cédula">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="nuevoTrabajadorTurno">Turno</label>
+                            <select id="nuevoTrabajadorTurno">
+                                <option value="">Seleccionar turno</option>
+                                <option value="MAÑANA">Mañana</option>
+                                <option value="TARDE">Tarde</option>
+                                <option value="NOCHE">Noche</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <button onclick="agregarTrabajador()" class="btn btn-success">
+                                ➕ Agregar Trabajador
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="config-section">
+                    <div class="section-header">
+                        🚗 Gestión de Vehículos
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="nuevoVehiculoPlaca">Placa *</label>
+                            <input type="text" id="nuevoVehiculoPlaca" placeholder="ABC-123" style="text-transform: uppercase;">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="nuevoVehiculoModelo">Modelo</label>
+                            <input type="text" id="nuevoVehiculoModelo" placeholder="Toyota Hilux">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="nuevoVehiculoAno">Año</label>
+                            <input type="number" id="nuevoVehiculoAno" min="1900" max="2030" placeholder="2023">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="nuevoVehiculoTipo">Tipo de Vehículo</label>
+                            <input type="text" id="nuevoVehiculoTipo" placeholder="Camioneta">
+                        </div>
+                        
+                        <div class="form-group">
+                            <button onclick="agregarVehiculo()" class="btn btn-success">
+                                ➕ Agregar Vehículo
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="config-section">
+                    <div class="section-header">
+                        🔧 Configuración del Sistema
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <button onclick="verificarConexion()" class="btn btn-info">
+                                📡 Verificar Conexión
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="functions.js"></script>
+</body>
+</html>
