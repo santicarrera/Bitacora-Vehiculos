@@ -87,6 +87,12 @@
                                         <option value="incidencia">Incidencia</option>
                                     </select>
                                 </div>
+
+                                <!-- CAMPO DE KILÓMETROS DINÁMICO -->
+                                <div class="form-group hidden" id="grupoKilometros">
+                                    <label for="kilometros" id="labelKilometros">Kilómetros</label>
+                                    <input type="number" id="kilometros" step="0.1" min="0" placeholder="Ingrese kilómetros...">
+                                </div>
                                 
                                 <div class="form-group full-width">
                                     <label for="observacionesGenerales">Observaciones Generales</label>
@@ -350,8 +356,8 @@
                         </div>
                         
                         <div class="form-group">
-                            <label for="nuevoTrabajadorCedula">Cédula</label>
-                            <input type="text" id="nuevoTrabajadorCedula" placeholder="Número de cédula">
+                            <label for="nuevoTrabajadorCedula">Legajo</label>
+                            <input type="text" id="nuevoTrabajadorCedula" placeholder="Número de Legajo">
                         </div>
                         
                         <div class="form-group">
@@ -392,7 +398,7 @@
                     <!-- Agregar nuevo vehículo -->
                     <div class="form-row">
                         <div class="form-group">
-                            <label for="nuevoVehiculoPlaca">Placa *</label>
+                            <label for="nuevoVehiculoPlaca">Patente *</label>
                             <input type="text" id="nuevoVehiculoPlaca" placeholder="ABC-123" style="text-transform: uppercase;">
                         </div>
                         
@@ -447,104 +453,6 @@
             </div>
         </div>
     </div>
-
-    <!-- CSS adicional para las nuevas funcionalidades -->
-    <style>
-        .subsection-header {
-            background: #f8f9fa;
-            padding: 10px 15px;
-            margin: 20px 0 10px 0;
-            border-left: 4px solid #007bff;
-            font-weight: 600;
-            color: #495057;
-        }
-
-        .items-list {
-            background: #fff;
-            border: 1px solid #dee2e6;
-            border-radius: 8px;
-            margin-bottom: 20px;
-        }
-
-        .item-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 15px 20px;
-            border-bottom: 1px solid #dee2e6;
-            transition: background-color 0.2s;
-        }
-
-        .item-row:hover {
-            background-color: #f8f9fa;
-        }
-
-        .item-row:last-child {
-            border-bottom: none;
-        }
-
-        .item-info {
-            flex: 1;
-        }
-
-        .item-name {
-            font-weight: 600;
-            color: #495057;
-            margin-bottom: 4px;
-        }
-
-        .item-details {
-            font-size: 0.9em;
-            color: #6c757d;
-        }
-
-        .item-actions {
-            display: flex;
-            gap: 8px;
-        }
-
-        .btn-delete {
-            background: #dc3545;
-            color: white;
-            border: none;
-            padding: 6px 12px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 0.85em;
-            transition: background-color 0.2s;
-        }
-
-        .btn-delete:hover {
-            background: #c82333;
-        }
-
-        .btn-edit {
-            background: #ffc107;
-            color: #212529;
-            border: none;
-            padding: 6px 12px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 0.85em;
-            transition: background-color 0.2s;
-        }
-
-        .btn-edit:hover {
-            background: #e0a800;
-        }
-
-        .empty-state {
-            text-align: center;
-            padding: 40px 20px;
-            color: #6c757d;
-        }
-
-        .empty-state .icon {
-            font-size: 3em;
-            margin-bottom: 10px;
-            opacity: 0.5;
-        }
-    </style>
 
     <script src="functions.js"></script>
 </body>
