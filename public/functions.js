@@ -366,6 +366,8 @@ async function agregarVehiculo() {
 // ====================================
 async function guardarRegistro() {
     const formData = recopilarDatosFormulario();
+
+    console.log('Kilómetros capturados:', formData.kilometros);
     
     // Validar datos requeridos
     if (!validarDatosRequeridos(formData)) {
@@ -430,7 +432,7 @@ async function guardarRegistro() {
         // Restaurar botón
         const submitBtn = document.querySelector('button[type="submit"]');
         if (submitBtn) {
-            submitBtn.textContent = originalText;
+            submitBtn.textContent = 'Guardar Registro';
             submitBtn.disabled = false;
         }
     }
@@ -507,6 +509,7 @@ function mostrarTablaHistorial(registros) {
     `;
 
     registros.forEach(registro => {
+        console.log('Registro:', registro.id_bitacora, 'Kilómetros:', registro.kilometros);
         const fechaFormateada = new Date(registro.fecha).toLocaleDateString('es-ES');
         const observaciones = registro.observaciones_generales 
             ? (registro.observaciones_generales.length > 50 
