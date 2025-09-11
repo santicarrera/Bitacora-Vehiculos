@@ -187,6 +187,11 @@ app.get('/api/bitacora', (req, res) => {
 });
 
 // Crear nuevo registro de bitácora
+// ===============================================
+// CORRECCIÓN COMPLETA PARA server.js
+// Reemplaza TODA la función app.post('/api/bitacora')
+// ===============================================
+
 app.post('/api/bitacora', (req, res) => {
     const {
         id_trabajador,
@@ -194,11 +199,22 @@ app.post('/api/bitacora', (req, res) => {
         fecha,
         turno,
         tipo_registro,
+        kilometros,  // NUEVO CAMPO
         observaciones_generales,
         equipo,
         vehiculo_checks,
         combustible
     } = req.body;
+    
+    console.log('Datos recibidos:', {
+        id_trabajador,
+        id_vehiculo,
+        fecha,
+        turno,
+        tipo_registro,
+        kilometros,
+        observaciones_generales
+    });
     
     if (!id_trabajador || !id_vehiculo || !fecha || !turno || !tipo_registro) {
         return res.status(400).json({ error: 'Faltan datos obligatorios' });
@@ -211,25 +227,56 @@ app.post('/api/bitacora', (req, res) => {
             return res.status(500).json({ error: 'Error del servidor' });
         }
         
-        // 1. Insertar registro principal de bitácora
+        // 1. Insertar registro principal de bitácora CON KILÓMETROS
         const bitacoraQuery = `
             INSERT INTO bitacora_vehiculo 
-            (id_trabajador, id_vehiculo, fecha, turno, tipo_registro, observaciones_generales) 
-            VALUES (?, ?, ?, ?, ?, ?)
+            (id_trabajador, id_vehiculo, fecha, turno, tipo_registro, kilometros, observaciones_generales) 
+            VALUES (?, ?, ?, ?, ?, ?, ?)
         `;
         
-        db.query(bitacoraQuery, [id_trabajador, id_vehiculo, fecha, turno, tipo_registro, observaciones_generales], (err, result) => {
+        const kilometrosValue = kilometros ? parseFloat(kilometros) : null;
+        console.log('Insertando kilómetros:', kilometrosValue);
+        
+        db.query(bitacoraQuery, [
+            id_trabajador, 
+            id_vehiculo, 
+            fecha, 
+            turno, 
+            tipo_registro, 
+            kilometrosValue,
+            observaciones_generales
+        ], (err, result) => {
             if (err) {
                 return db.rollback(() => {
                     console.error('Error insertando bitácora:', err);
-                    res.status(500).json({ error: 'Error del servidor' });
+                    res.status(500).json({ error: 'Error del servidor insertando bitácora' });
                 });
             }
             
             const bitacoraId = result.insertId;
+            console.log(`Registro ${bitacoraId} creado exitosamente con kilómetros: ${kilometrosValue}`);
             
-            // 2. Insertar verificación de equipo
-            if (equipo) {
+            // Función auxiliar para completar la transacción
+            const completarTransaccion = () => {
+                db.commit((err) => {
+                    if (err) {
+                        return db.rollback(() => {
+                            console.error('Error confirmando transacción:', err);
+                            res.status(500).json({ error: 'Error confirmando transacción' });
+                        });
+                    }
+                    
+                    console.log('Registro guardado exitosamente');
+                    res.json({
+                        message: 'Registro de bitácora guardado exitosamente',
+                        id_bitacora: bitacoraId
+                    });
+                });
+            };
+            
+            // 2. Insertar verificación de equipo (si existe)
+            if (equipo && Object.keys(equipo).length > 0) {
+                console.log('Insertando verificación de equipo...');
                 const equipoQuery = `
                     INSERT INTO verificacion_equipo (
                         id_bitacora, pertiga, escalera_baja, escalera_media, detector_13_2kv,
@@ -261,110 +308,92 @@ app.post('/api/bitacora', (req, res) => {
                     if (err) {
                         return db.rollback(() => {
                             console.error('Error insertando equipo:', err);
-                            res.status(500).json({ error: 'Error del servidor' });
+                            res.status(500).json({ error: 'Error insertando verificación de equipo' });
                         });
                     }
                     
-                    // 3. Insertar verificación de vehículo
-                    if (vehiculo_checks) {
-                        const vehiculoQuery = `
-                            INSERT INTO verificacion_vehiculo (
-                                id_bitacora, seguro, cedula_vehiculo, luces, balizas,
-                                aceite, agua, liquido_freno, rodados_presion, matafueg,
-                                auxilio_gato, conos_soga, botiquin
-                            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-                        `;
-                        
-                        db.query(vehiculoQuery, [
-                            bitacoraId,
-                            vehiculo_checks.seguro || false,
-                            vehiculo_checks.cedula_vehiculo || false,
-                            vehiculo_checks.luces || false,
-                            vehiculo_checks.balizas || false,
-                            vehiculo_checks.aceite || false,
-                            vehiculo_checks.agua || false,
-                            vehiculo_checks.liquido_freno || false,
-                            vehiculo_checks.rodados_presion || false,
-                            vehiculo_checks.matafueg || false,
-                            vehiculo_checks.auxilio_gato || false,
-                            vehiculo_checks.conos_soga || false,
-                            vehiculo_checks.botiquin || false
-                        ], (err) => {
-                            if (err) {
-                                return db.rollback(() => {
-                                    console.error('Error insertando verificación vehículo:', err);
-                                    res.status(500).json({ error: 'Error del servidor' });
-                                });
-                            }
-                            
-                            // 4. Insertar datos de combustible (si existen)
-                            if (combustible && (combustible.carga_combustible || combustible.observaciones_combustible)) {
-                                const combustibleQuery = `
-                                    INSERT INTO combustible (id_bitacora, carga_combustible, observaciones_combustible) 
-                                    VALUES (?, ?, ?)
-                                `;
-                                
-                                db.query(combustibleQuery, [
-                                    bitacoraId,
-                                    combustible.carga_combustible || null,
-                                    combustible.observaciones_combustible || null
-                                ], (err) => {
-                                    if (err) {
-                                        return db.rollback(() => {
-                                            console.error('Error insertando combustible:', err);
-                                            res.status(500).json({ error: 'Error del servidor' });
-                                        });
-                                    }
-                                    
-                                    // Confirmar transacción
-                                    db.commit((err) => {
-                                        if (err) {
-                                            return db.rollback(() => {
-                                                console.error('Error confirmando transacción:', err);
-                                                res.status(500).json({ error: 'Error del servidor' });
-                                            });
-                                        }
-                                        
-                                        res.json({
-                                            message: 'Registro de bitácora guardado exitosamente',
-                                            id_bitacora: bitacoraId
-                                        });
-                                    });
-                                });
-                            } else {
-                                // Confirmar transacción sin combustible
-                                db.commit((err) => {
-                                    if (err) {
-                                        return db.rollback(() => {
-                                            console.error('Error confirmando transacción:', err);
-                                            res.status(500).json({ error: 'Error del servidor' });
-                                        });
-                                    }
-                                    
-                                    res.json({
-                                        message: 'Registro de bitácora guardado exitosamente',
-                                        id_bitacora: bitacoraId
-                                    });
-                                });
-                            }
-                        });
-                    } else {
-                        // Sin verificación de vehículo, ir directo al commit
-                        db.commit((err) => {
-                            if (err) {
-                                return db.rollback(() => {
-                                    console.error('Error confirmando transacción:', err);
-                                    res.status(500).json({ error: 'Error del servidor' });
-                                });
-                            }
-                            
-                            res.json({
-                                message: 'Registro de bitácora guardado exitosamente',
-                                id_bitacora: bitacoraId
-                            });
-                        });
-                    }
+                    console.log('Verificación de equipo insertada');
+                    // Continuar con vehículo
+                    insertarVerificacionVehiculo();
                 });
+            } else {
+                // Sin equipo, continuar con vehículo
+                insertarVerificacionVehiculo();
+            }
+            
+            // 3. Función para insertar verificación de vehículo
+            function insertarVerificacionVehiculo() {
+                if (vehiculo_checks && Object.keys(vehiculo_checks).length > 0) {
+                    console.log('Insertando verificación de vehículo...');
+                    const vehiculoQuery = `
+                        INSERT INTO verificacion_vehiculo (
+                            id_bitacora, seguro, cedula_vehiculo, luces, balizas,
+                            aceite, agua, liquido_freno, rodados_presion, matafueg,
+                            auxilio_gato, conos_soga, botiquin
+                        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                    `;
+                    
+                    db.query(vehiculoQuery, [
+                        bitacoraId,
+                        vehiculo_checks.seguro || false,
+                        vehiculo_checks.cedula_vehiculo || false,
+                        vehiculo_checks.luces || false,
+                        vehiculo_checks.balizas || false,
+                        vehiculo_checks.aceite || false,
+                        vehiculo_checks.agua || false,
+                        vehiculo_checks.liquido_freno || false,
+                        vehiculo_checks.rodados_presion || false,
+                        vehiculo_checks.matafueg || false,
+                        vehiculo_checks.auxilio_gato || false,
+                        vehiculo_checks.conos_soga || false,
+                        vehiculo_checks.botiquin || false
+                    ], (err) => {
+                        if (err) {
+                            return db.rollback(() => {
+                                console.error('Error insertando verificación vehículo:', err);
+                                res.status(500).json({ error: 'Error insertando verificación de vehículo' });
+                            });
+                        }
+                        
+                        console.log('Verificación de vehículo insertada');
+                        // Continuar con combustible
+                        insertarCombustible();
+                    });
+                } else {
+                    // Sin verificación de vehículo, continuar con combustible
+                    insertarCombustible();
+                }
+            }
+            
+            // 4. Función para insertar combustible
+            function insertarCombustible() {
+                if (combustible && (combustible.carga_combustible || combustible.observaciones_combustible)) {
+                    console.log('Insertando datos de combustible...');
+                    const combustibleQuery = `
+                        INSERT INTO combustible (id_bitacora, carga_combustible, observaciones_combustible) 
+                        VALUES (?, ?, ?)
+                    `;
+                    
+                    db.query(combustibleQuery, [
+                        bitacoraId,
+                        combustible.carga_combustible || null,
+                        combustible.observaciones_combustible || null
+                    ], (err) => {
+                        if (err) {
+                            return db.rollback(() => {
+                                console.error('Error insertando combustible:', err);
+                                res.status(500).json({ error: 'Error insertando datos de combustible' });
+                            });
+                        }
+                        
+                        console.log('Datos de combustible insertados');
+                        // Completar transacción
+                        completarTransaccion();
+                    });
+                } else {
+                    // Sin combustible, completar transacción
+                    completarTransaccion();
+                }
             }
         });
     });
@@ -386,6 +415,7 @@ app.get('/api/bitacora/:id', (req, res) => {
             e.*,
             vv.*,
             c.carga_combustible,
+            b.kilometros, 
             c.observaciones_combustible
         FROM bitacora_vehiculo b
         JOIN trabajadores t ON b.id_trabajador = t.id_trabajador
