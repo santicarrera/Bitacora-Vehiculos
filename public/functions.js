@@ -383,6 +383,7 @@ async function guardarRegistro() {
         turno: formData.turno,
         tipo_registro: formData.tipoRegistro,
         kilometros: formData.kilometros ? parseFloat(formData.kilometros) : null, // NUEVO CAMPO
+        acompanante: formData.acompanante || null,
         observaciones_generales: formData.observacionesGenerales || null,
         equipo: formData.equipo,
         vehiculo_checks: formData.vehiculoCheck,
@@ -500,7 +501,7 @@ function mostrarTablaHistorial(registros) {
                     <th>Vehículo</th>
                     <th>Turno</th>
                     <th>Tipo</th>
-                    <th>Kilómetros</th>
+                    <th>Acompañante</th>
                     <th>Observaciones</th>
                     <th>Acciones</th>
                 </tr>
@@ -509,7 +510,7 @@ function mostrarTablaHistorial(registros) {
     `;
 
     registros.forEach(registro => {
-        console.log('Registro:', registro.id_bitacora, 'Kilómetros:', registro.kilometros);
+        console.log('Registro:', registro.id_bitacora, 'Kilómetros:', registro.kilometros, 'Acompañante:', registro.acompanante);
         const fechaFormateada = new Date(registro.fecha).toLocaleDateString('es-ES');
         const observaciones = registro.observaciones_generales 
             ? (registro.observaciones_generales.length > 50 
@@ -517,6 +518,10 @@ function mostrarTablaHistorial(registros) {
                 : registro.observaciones_generales)
             : 'Sin observaciones';
         
+        const acompanante = registro.acompanante && registro.acompanante.trim() !== ''
+            ? registro.acompanante
+            : 'Sin acompañante';
+
         const kilometros = registro.kilometros 
             ? `${registro.kilometros} km`
             : '-';
@@ -528,7 +533,7 @@ function mostrarTablaHistorial(registros) {
                 <td>${registro.vehiculo_placa || 'N/A'} - ${registro.vehiculo_modelo || 'N/A'}</td>
                 <td>${registro.turno}</td>
                 <td>${registro.tipo_registro ? registro.tipo_registro.replace('_', ' ') : 'N/A'}</td>
-                <td>${kilometros}</td>
+                <td>${acompanante}</td>
                 <td>${observaciones}</td>
                 <td>
                     <button onclick="verDetalle(${registro.id_bitacora})" class="btn-info" style="padding: 5px 10px; font-size: 0.85em;">Ver</button>
@@ -610,6 +615,7 @@ async function verDetalle(idBitacora) {
 ⏰ Turno: ${detalle.turno}
 📝 Tipo: ${detalle.tipo_registro.replace('_', ' ')}
 🛣️ Kilómetros: ${detalle.kilometros ? detalle.kilometros + ' km' : 'No registrado'}
+🧑‍🤝‍🧑 Acompañante: ${detalle.acompanante ? detalle.acompanante : 'No registrado'}
 
 📝 Observaciones Generales:
 ${detalle.observaciones_generales || 'Sin observaciones'}
@@ -670,6 +676,7 @@ function recopilarDatosFormulario() {
         turno: document.getElementById('turno')?.value || '',
         tipoRegistro: document.getElementById('tipoRegistro')?.value || '',
         kilometros: document.getElementById('kilometros')?.value || '', // NUEVO CAMPO
+        acompanante: document.getElementById('acompanante')?.value || '',
         observacionesGenerales: document.getElementById('observacionesGenerales')?.value || '',
         cargaCombustible: document.getElementById('cargaCombustible')?.value || '',
         observacionesCombustible: document.getElementById('observacionesCombustible')?.value || '',
