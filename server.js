@@ -141,6 +141,8 @@ app.get('/api/bitacora', (req, res) => {
             b.fecha,
             b.turno,
             b.tipo_registro,
+            b.kilometros,
+            b.acompanante,
             b.observaciones_generales,
             b.fecha_registro,
             t.nombre as trabajador_nombre,
@@ -200,6 +202,7 @@ app.post('/api/bitacora', (req, res) => {
         turno,
         tipo_registro,
         kilometros,  // NUEVO CAMPO
+        acompanante,
         observaciones_generales,
         equipo,
         vehiculo_checks,
@@ -213,6 +216,7 @@ app.post('/api/bitacora', (req, res) => {
         turno,
         tipo_registro,
         kilometros,
+        acompanante,
         observaciones_generales
     });
     
@@ -230,8 +234,8 @@ app.post('/api/bitacora', (req, res) => {
         // 1. Insertar registro principal de bitácora CON KILÓMETROS
         const bitacoraQuery = `
             INSERT INTO bitacora_vehiculo 
-            (id_trabajador, id_vehiculo, fecha, turno, tipo_registro, kilometros, observaciones_generales) 
-            VALUES (?, ?, ?, ?, ?, ?, ?)
+            (id_trabajador, id_vehiculo, fecha, turno, tipo_registro, kilometros, acompanante, observaciones_generales) 
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
         `;
         
         const kilometrosValue = kilometros ? parseFloat(kilometros) : null;
@@ -244,6 +248,7 @@ app.post('/api/bitacora', (req, res) => {
             turno, 
             tipo_registro, 
             kilometrosValue,
+            acompanante,
             observaciones_generales
         ], (err, result) => {
             if (err) {
@@ -415,6 +420,7 @@ app.get('/api/bitacora/:id', (req, res) => {
             e.*,
             vv.*,
             c.carga_combustible,
+            b.acompanante,
             b.kilometros, 
             c.observaciones_combustible
         FROM bitacora_vehiculo b
