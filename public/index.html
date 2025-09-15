@@ -96,7 +96,79 @@
                                 
                                 <div class="form-group full-width">
                                     <label for="observacionesGenerales">Observaciones Generales</label>
-                                    <textarea id="observacionesGenerales" rows="3" placeholder="Observaciones del turno o registro..."></textarea>
+                                    <textarea id="observacionesGenerales" rows="3" placeholder="Observaciones generales o tipo mecanicas..."></textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- VERIFICACIÓN DE VEHÍCULO -->
+                        <div class="form-section">
+                            <div class="section-header">
+                                🚗 Verificación de Vehículo
+                                <button type="button" onclick="marcarTodosVehiculo()" class="btn btn-outline btn-sm" style="margin-left: auto;">
+                                    ✓ Sin cambios
+                                </button>
+                            </div>
+                            
+                            <div class="checkbox-grid">
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="seguro" name="vehiculo">
+                                    <label for="seguro">Seguro</label>
+                                </div>
+                                
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="cedula_vehiculo" name="vehiculo">
+                                    <label for="cedula_vehiculo">Cédula Vehículo</label>
+                                </div>
+                                
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="luces" name="vehiculo">
+                                    <label for="luces">Luces</label>
+                                </div>
+                                
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="balizas" name="vehiculo">
+                                    <label for="balizas">Balizas</label>
+                                </div>
+                                
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="aceite" name="vehiculo">
+                                    <label for="aceite">Aceite</label>
+                                </div>
+                                
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="agua" name="vehiculo">
+                                    <label for="agua">Agua</label>
+                                </div>
+                                
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="liquido_freno" name="vehiculo">
+                                    <label for="liquido_freno">Líquido de Freno</label>
+                                </div>
+                                
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="rodados_presion" name="vehiculo">
+                                    <label for="rodados_presion">Rodados Presión</label>
+                                </div>
+                                
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="matafueg" name="vehiculo">
+                                    <label for="matafueg">Matafuego</label>
+                                </div>
+                                
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="auxilio_gato" name="vehiculo">
+                                    <label for="auxilio_gato">Auxilio-Gato</label>
+                                </div>
+                                
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="conos_soga" name="vehiculo">
+                                    <label for="conos_soga">Conos (Soga)</label>
+                                </div>
+                                
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="botiquin" name="vehiculo">
+                                    <label for="botiquin">Botiquín</label>
                                 </div>
                             </div>
                         </div>
@@ -105,6 +177,9 @@
                         <div class="form-section">
                             <div class="section-header">
                                 🔧 Verificación de Equipo
+                                <button type="button" onclick="marcarTodosEquipo()" class="btn btn-outline btn-sm" style="margin-left: auto;">
+                                    ✓ Sin cambios
+                                </button>
                             </div>
                             
                             <div class="checkbox-grid">
@@ -186,75 +261,6 @@
                                 <div class="checkbox-item">
                                     <input type="checkbox" id="herramientas_mano" name="equipo">
                                     <label for="herramientas_mano">Herramientas de Mano</label>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- VERIFICACIÓN DE VEHÍCULO -->
-                        <div class="form-section">
-                            <div class="section-header">
-                                🚗 Verificación de Vehículo
-                            </div>
-                            
-                            <div class="checkbox-grid">
-                                <div class="checkbox-item">
-                                    <input type="checkbox" id="seguro" name="vehiculo">
-                                    <label for="seguro">Seguro</label>
-                                </div>
-                                
-                                <div class="checkbox-item">
-                                    <input type="checkbox" id="cedula_vehiculo" name="vehiculo">
-                                    <label for="cedula_vehiculo">Cédula Vehículo</label>
-                                </div>
-                                
-                                <div class="checkbox-item">
-                                    <input type="checkbox" id="luces" name="vehiculo">
-                                    <label for="luces">Luces</label>
-                                </div>
-                                
-                                <div class="checkbox-item">
-                                    <input type="checkbox" id="balizas" name="vehiculo">
-                                    <label for="balizas">Balizas</label>
-                                </div>
-                                
-                                <div class="checkbox-item">
-                                    <input type="checkbox" id="aceite" name="vehiculo">
-                                    <label for="aceite">Aceite</label>
-                                </div>
-                                
-                                <div class="checkbox-item">
-                                    <input type="checkbox" id="agua" name="vehiculo">
-                                    <label for="agua">Agua</label>
-                                </div>
-                                
-                                <div class="checkbox-item">
-                                    <input type="checkbox" id="liquido_freno" name="vehiculo">
-                                    <label for="liquido_freno">Líquido de Freno</label>
-                                </div>
-                                
-                                <div class="checkbox-item">
-                                    <input type="checkbox" id="rodados_presion" name="vehiculo">
-                                    <label for="rodados_presion">Rodados Presión</label>
-                                </div>
-                                
-                                <div class="checkbox-item">
-                                    <input type="checkbox" id="matafueg" name="vehiculo">
-                                    <label for="matafueg">Matafuego</label>
-                                </div>
-                                
-                                <div class="checkbox-item">
-                                    <input type="checkbox" id="auxilio_gato" name="vehiculo">
-                                    <label for="auxilio_gato">Auxilio-Gato</label>
-                                </div>
-                                
-                                <div class="checkbox-item">
-                                    <input type="checkbox" id="conos_soga" name="vehiculo">
-                                    <label for="conos_soga">Conos (Soga)</label>
-                                </div>
-                                
-                                <div class="checkbox-item">
-                                    <input type="checkbox" id="botiquin" name="vehiculo">
-                                    <label for="botiquin">Botiquín</label>
                                 </div>
                             </div>
                         </div>
@@ -453,6 +459,28 @@
             </div>
         </div>
     </div>
+
+    <script>
+        // Función para marcar todos los checkboxes de vehículo
+        function marcarTodosVehiculo() {
+            const checkboxes = document.querySelectorAll('input[name="vehiculo"]');
+            const todosMarcados = Array.from(checkboxes).every(cb => cb.checked);
+            
+            checkboxes.forEach(checkbox => {
+                checkbox.checked = !todosMarcados;
+            });
+        }
+
+        // Función para marcar todos los checkboxes de equipo
+        function marcarTodosEquipo() {
+            const checkboxes = document.querySelectorAll('input[name="equipo"]');
+            const todosMarcados = Array.from(checkboxes).every(cb => cb.checked);
+            
+            checkboxes.forEach(checkbox => {
+                checkbox.checked = !todosMarcados;
+            });
+        }
+    </script>
 
     <script src="functions.js"></script>
 </body>
