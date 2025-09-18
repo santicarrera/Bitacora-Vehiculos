@@ -84,6 +84,26 @@ app.post('/api/trabajadores', (req, res) => {
     });
 });
 
+// Eliminar trabajador
+app.delete('/api/trabajadores/:id', (req, res) => {
+    const trabajadorId = req.params.id;
+    
+    const query = 'UPDATE trabajadores SET activo = FALSE WHERE id_trabajador = ?';
+    
+    db.query(query, [trabajadorId], (err, result) => {
+        if (err) {
+            console.error('Error eliminando trabajador:', err);
+            return res.status(500).json({ error: 'Error del servidor' });
+        }
+        
+        if (result.affectedRows === 0) {
+            return res.status(404).json({ error: 'Trabajador no encontrado' });
+        }
+        
+        res.json({ message: 'Trabajador eliminado exitosamente' });
+    });
+});
+
 // ===============================================
 // VEHÍCULOS
 // ===============================================
@@ -124,6 +144,26 @@ app.post('/api/vehiculos', (req, res) => {
             message: 'Vehículo agregado exitosamente',
             id: result.insertId
         });
+    });
+});
+
+// Eliminar vehículo
+app.delete('/api/vehiculos/:id', (req, res) => {
+    const vehiculoId = req.params.id;
+    
+    const query = 'UPDATE vehiculos SET activo = FALSE WHERE id_vehiculo = ?';
+    
+    db.query(query, [vehiculoId], (err, result) => {
+        if (err) {
+            console.error('Error eliminando vehículo:', err);
+            return res.status(500).json({ error: 'Error del servidor' });
+        }
+        
+        if (result.affectedRows === 0) {
+            return res.status(404).json({ error: 'Vehículo no encontrado' });
+        }
+        
+        res.json({ message: 'Vehículo eliminado exitosamente' });
     });
 });
 

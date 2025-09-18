@@ -163,6 +163,8 @@ function showTab(tabName, buttonElement = null) {
                 break;
             case 'configuracion':
                 console.log('Pestaña de configuración activada');
+                cargarListaTrabajadores();
+                cargarListaVehiculos();
                 break;
             case 'nuevo-registro':
                 console.log('Pestaña de nuevo registro activada');
@@ -239,12 +241,12 @@ async function cargarTrabajadores() {
 async function agregarTrabajador() {
     const nombre = document.getElementById('nuevoTrabajadorNombre')?.value?.trim() || '';
     const cedula = document.getElementById('nuevoTrabajadorCedula')?.value?.trim() || '';
-    const turno = document.getElementById('nuevoTrabajadorTurno')?.value || '';
+    const turno = 'GENERAL';
 
-    if (!nombre || !cedula || !turno) {
-        mostrarMensaje('Por favor complete todos los campos del trabajador', 'danger');
-        return;
-    }
+    if (!nombre || !cedula) {
+    mostrarMensaje('Por favor complete todos los campos del trabajador', 'danger');
+    return;
+}
 
     try {
         const response = await fetch(`${API_BASE_URL}/trabajadores`, {
@@ -264,7 +266,7 @@ async function agregarTrabajador() {
         // Limpiar campos
         document.getElementById('nuevoTrabajadorNombre').value = '';
         document.getElementById('nuevoTrabajadorCedula').value = '';
-        document.getElementById('nuevoTrabajadorTurno').value = '';
+        // document.getElementById('nuevoTrabajadorTurno').value = '';
 
         mostrarMensaje(`Trabajador "${nombre}" agregado exitosamente`, 'success');
         await cargarTrabajadores();
@@ -736,6 +738,138 @@ function limpiarFormulario() {
 }
 
 // ====================================
+// FUNCIONES PARA MOSTRAR LISTAS
+// ====================================
+async function cargarListaTrabajadores() {
+    try {
+        const listDiv = document.getElementById('listaTrabajadores');
+        if (!listDiv) return;
+        
+        listDiv.innerHTML = `
+            <div class="loading">
+                <div class="spinner"></div>
+                <p>Cargando trabajadores...</p>
+            </div>
+        `;
+        
+        const response = await fetch(`${API_BASE_URL}/trabajadores`);
+        if (!response.ok) throw new Error(`Error HTTP: ${response.status}`);
+        
+        const trabajadores = await response.json();
+        
+        if (trabajadores.length === 0) {
+            listDiv.innerHTML = '<p>No hay trabajadores registrados</p>';
+            return;
+        }
+        
+        let html = '';
+        trabajadores.forEach(trabajador => {
+            html += `
+                <div class="item-row">
+                    <div class="item-info">
+                        <strong>${trabajador.nombre}</strong><br>
+                        <small>Legajo: ${trabajador.cedula} - Turno: ${trabajador.turno || 'N/A'}</small>
+                    </div>
+                    <div class="item-actions">
+                        <button onclick="eliminarTrabajador(${trabajador.id_trabajador})" class="btn btn-danger btn-sm">Eliminar</button>
+                    </div>
+                </div>
+            `;
+        });
+        
+        listDiv.innerHTML = html;
+        
+    } catch (error) {
+        console.error('Error cargando lista de trabajadores:', error);
+        document.getElementById('listaTrabajadores').innerHTML = 
+            `<p class="error">Error cargando trabajadores: ${error.message}</p>`;
+    }
+}
+
+async function cargarListaVehiculos() {
+    try {
+        const listDiv = document.getElementById('listaVehiculos');
+        if (!listDiv) return;
+        
+        listDiv.innerHTML = `
+            <div class="loading">
+                <div class="spinner"></div>
+                <p>Cargando vehículos...</p>
+            </div>
+        `;
+        
+        const response = await fetch(`${API_BASE_URL}/vehiculos`);
+        if (!response.ok) throw new Error(`Error HTTP: ${response.status}`);
+        
+        const vehiculos = await response.json();
+        
+        if (vehiculos.length === 0) {
+            listDiv.innerHTML = '<p>No hay vehículos registrados</p>';
+            return;
+        }
+        
+        let html = '';
+        vehiculos.forEach(vehiculo => {
+            html += `
+                <div class="item-row">
+                    <div class="item-info">
+                        <strong>${vehiculo.placa}</strong><br>
+                        <small>${vehiculo.modelo || 'Sin modelo'} - ${vehiculo.año || 'Sin año'}</small>
+                    </div>
+                    <div class="item-actions">
+                        <button onclick="eliminarVehiculo(${vehiculo.id_vehiculo})" class="btn btn-danger btn-sm">Eliminar</button>
+                    </div>
+                </div>
+            `;
+        });
+        
+        listDiv.innerHTML = html;
+        
+    } catch (error) {
+        console.error('Error cargando lista de vehículos:', error);
+        document.getElementById('listaVehiculos').innerHTML = 
+            `<p class="error">Error cargando vehículos: ${error.message}</p>`;
+    }
+}
+
+// Funciones para eliminar (opcional)
+async function eliminarTrabajador(id) {
+    if (!confirm('¿Está seguro de eliminar este trabajador?')) return;
+    
+    try {
+        const response = await fetch(`${API_BASE_URL}/trabajadores/${id}`, {
+            method: 'DELETE'
+        });
+        
+        if (response.ok) {
+            mostrarMensaje('Trabajador eliminado exitosamente', 'success');
+            cargarListaTrabajadores();
+            cargarTrabajadores();
+        }
+    } catch (error) {
+        mostrarMensaje('Error eliminando trabajador', 'danger');
+    }
+}
+
+async function eliminarVehiculo(id) {
+    if (!confirm('¿Está seguro de eliminar este vehículo?')) return;
+    
+    try {
+        const response = await fetch(`${API_BASE_URL}/vehiculos/${id}`, {
+            method: 'DELETE'
+        });
+        
+        if (response.ok) {
+            mostrarMensaje('Vehículo eliminado exitosamente', 'success');
+            cargarListaVehiculos();
+            cargarVehiculos();
+        }
+    } catch (error) {
+        mostrarMensaje('Error eliminando vehículo', 'danger');
+    }
+}
+
+// ====================================
 // VERIFICACIÓN DE CONEXIÓN
 // ====================================
 async function verificarConexion() {
@@ -761,4 +895,8 @@ window.buscarRegistros = buscarRegistros;
 window.verDetalle = verDetalle;
 window.agregarTrabajador = agregarTrabajador;
 window.agregarVehiculo = agregarVehiculo;
+window.cargarListaTrabajadores = cargarListaTrabajadores;
+window.cargarListaVehiculos = cargarListaVehiculos;
+window.eliminarTrabajador = eliminarTrabajador;
+window.eliminarVehiculo = eliminarVehiculo;
 window.verificarConexion = verificarConexion;
