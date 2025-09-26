@@ -12,15 +12,18 @@
     "bitacora",
     "vehiculos",
     "nodejs",
-    "mysql",
+    "sqlite",
     "express"
   ],
   "author": "Tu Nombre",
   "license": "MIT",
+  "engines": {
+    "node": "18.x"
+  },
   "dependencies": {
+    "cors": "^2.8.5",
     "express": "^4.18.2",
-    "mysql2": "^3.6.0",
-    "cors": "^2.8.5"
+    "sqlite3": "^5.1.7"
   },
   "devDependencies": {
     "nodemon": "^3.0.1"
