@@ -16,7 +16,8 @@ app.use(express.json());
 app.use(express.static('public')); // Para servir archivos estáticos
 
 // Configuración de la base de datos MySQL
-const dbPath = process.env.NODE_ENV === 'production' ? './database.sqlite' : './database.sqlite';
+const dbPath = './database.sqlite';
+const db = new sqlite3.Database(dbPath);
 
 // Conectar a la base de datos
 db.serialize(() => {
